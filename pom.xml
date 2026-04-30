@@ -13,6 +13,7 @@
 
     <!-- CHILD MODULES -->
     <modules>
+        <module>campaign-service</module>
     </modules>
 
     <!-- COMMON DEPENDENCY VERSIONS -->
