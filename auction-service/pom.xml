@@ -47,6 +47,21 @@
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
+
+		<dependency>
+			<groupId>com.adbidding</groupId>
+			<artifactId>common-libs</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<!-- Kafka Events -->
+		<dependency>
+			<groupId>com.adbidding</groupId>
+			<artifactId>kafka-events</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
