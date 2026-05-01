@@ -1,4 +1,4 @@
-package com.adbidding.auction_service.dtos;
+package com.adbidding.events;
 
 
 import lombok.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BidRequest {
+public class BidRequestEvent {
 
     private String requestId;
     private Long userId;
@@ -21,8 +21,8 @@ public class BidRequest {
     @Builder.Default
     private String correlationId = UUID.randomUUID().toString();
 
-    public static BidRequest create(Long userId, String location, String deviceType) {
-        return BidRequest.builder()
+    public static BidRequestEvent create(Long userId, String location, String deviceType) {
+        return BidRequestEvent.builder()
                 .requestId(UUID.randomUUID().toString())
                 .userId(userId)
                 .location(location)

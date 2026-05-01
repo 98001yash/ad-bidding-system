@@ -16,6 +16,7 @@
         <module>campaign-service</module>
         <module>auction-service</module>
         <module>common-libs</module>
+        <module>kafka-events</module>
     </modules>
 
     <!-- COMMON DEPENDENCY VERSIONS -->

@@ -1,4 +1,4 @@
-package com.adbidding.auction_service.dtos;
+package com.adbidding.events;
 
 
 import lombok.*;
@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BidResponse {
+public class BidResponse4Event {
 
     private String requestId;
     private Long adId;

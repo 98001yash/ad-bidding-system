@@ -1,4 +1,4 @@
-package com.adbidding.auction_service.dtos;
+package com.adbidding.events;
 
 
 import com.adbidding.auction_service.enums.AuctionStatus;
@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuctionResult {
+public class AuctionResultEvent {
 
     private String requestId;
     private Long winningAdId;
