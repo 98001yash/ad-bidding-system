@@ -3,13 +3,16 @@ package com.adbidding.campaign_service.service.Impl;
 
 import com.adbidding.campaign_service.entity.Campaign;
 import com.adbidding.campaign_service.enums.CampaignStatus;
+import com.adbidding.campaign_service.exceptions.CampaignNotFoundException;
 import com.adbidding.campaign_service.exceptions.InvalidCampaignException;
 import com.adbidding.campaign_service.repository.CampaignRepository;
 import com.adbidding.campaign_service.service.CampaignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,7 +27,7 @@ public class CampaignServiceImpl implements CampaignService {
     public Campaign createCampaign(Campaign campaign) {
 
         log.info("Creating campaign with name={}",campaign.getName());
-        validateCampaign(campaign)
+        validateCampaign(campaign);
 
         campaign.setStatus(CampaignStatus.ACTIVE);
 
@@ -36,22 +39,63 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public Campaign getCampaignById(Long id) {
-        return null;
+
+        log.info("Getting campaign with id={}",id);
+
+        return campaignRepository.findById(id)
+                .orElseThrow(()->{
+                    log.error("Campaign not found wtth id={}",id);
+                    return new CampaignNotFoundException(id);
+                });
     }
 
     @Override
     public List<Campaign> getActiveCampaigns() {
-        return List.of();
+
+
+        LocalDateTime now = LocalDateTime.now();
+
+        log.debug("Fetching active campaigns at time={}",now);
+
+        return campaignRepository.findByStatusAndStartDateBeforeAndEndDateAfter(
+                CampaignStatus.ACTIVE,
+                now,
+                now
+        );
     }
 
     @Override
+    @Transactional
     public Campaign updateCampaign(Long id, Campaign campaign) {
-        return null;
+
+
+        log.info("Updating campaign with id={}",id);
+
+        Campaign existing = getCampaignById(id);
+
+        validateCampaign(campaign);
+
+        existing.setName(campaign.getName());
+        existing.setBudget(campaign.getBudget());
+        existing.setStartDate(campaign.getStartDate());
+        existing.setEndDate(campaign.getEndDate());
+        existing.setStatus(campaign.getStatus());
+
+        Campaign saved = campaignRepository.save(existing);
+
+        log.info("Campaign updated successfully id={}",id);
+        return saved;
     }
 
     @Override
+    @Transactional
     public void deleteCampaign(Long id) {
 
+        log.warn("Deleting campaign with id={}",id);
+        Campaign saved = getCampaignById(id);
+
+        campaignRepository.delete(saved);
+        log.info("Campaign deleted successfully with id={}",id);
     }
 
 
