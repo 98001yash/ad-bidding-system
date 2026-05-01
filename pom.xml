@@ -15,6 +15,7 @@
     <modules>
         <module>campaign-service</module>
         <module>auction-service</module>
+        <module>common-libs</module>
     </modules>
 
     <!-- COMMON DEPENDENCY VERSIONS -->
