@@ -56,16 +56,47 @@ public class AdCreativeServiceImpl implements AdCreativeService {
 
     @Override
     public AdCreative getAdById(Long adId) {
-        return null;
+
+        log.debug("Fetching ad with id={}",adId);
+
+        return adCreativeRepository.findById(adId)
+                .orElseThrow(()->{
+                    log.error("Ad not founf with id={}",adId);
+                    return new InvalidCampaignException("Ad not found with id={}"+adId);
+                });
     }
 
     @Override
+    @Transactional
     public AdCreative updateAd(Long adId, AdCreative adCreative) {
-        return null;
+
+
+        log.info("Updated ad with id={}",adId);
+
+        AdCreative existing = getAdById(adId);
+
+        validateAd(adCreative);
+
+        existing.setTitle(adCreative.getTitle());
+        existing.setImageUrl(adCreative.getImageUrl());
+        existing.setRedirectUrl(adCreative.getRedirectUrl());
+        existing.setBaseBid(adCreative.getBaseBid());
+
+        AdCreative saved = adCreativeRepository.save(existing);
+        log.info("Ad updated successfully id={}",adId);
+
+        return saved;
     }
 
     @Override
+    @Transactional
     public void deleteAd(Long adId) {
+
+        log.warn("Deleting ad with id={}", adId);
+        AdCreative ad = getAdById(adId);
+
+        adCreativeRepository.delete(ad);
+        log.warn("Ad deleted id={}", adId);
 
     }
 
