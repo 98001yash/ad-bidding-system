@@ -48,11 +48,6 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>com.adbidding</groupId>
-			<artifactId>common-libs</artifactId>
-			<version>1.0.0</version>
-		</dependency>
 
 		<!-- Kafka Events -->
 		<dependency>
