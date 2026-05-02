@@ -1,14 +1,17 @@
 package com.adbidding.campaign_service.service.Impl;
 
-
 import com.adbidding.campaign_service.entity.Campaign;
 import com.adbidding.campaign_service.enums.CampaignStatus;
 import com.adbidding.campaign_service.exceptions.CampaignNotFoundException;
 import com.adbidding.campaign_service.exceptions.InvalidCampaignException;
+import com.adbidding.campaign_service.kafka.BidRequestProducer;
 import com.adbidding.campaign_service.repository.CampaignRepository;
 import com.adbidding.campaign_service.service.CampaignService;
+
+import com.adbidding.events.BidRequestEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,30 +24,38 @@ import java.util.List;
 public class CampaignServiceImpl implements CampaignService {
 
     private final CampaignRepository campaignRepository;
+    private final BidRequestProducer bidRequestProducer;
 
 
     @Override
+    @Transactional
     public Campaign createCampaign(Campaign campaign) {
 
-        log.info("Creating campaign with name={}",campaign.getName());
+        log.info("Creating campaign with name={}", campaign.getName());
+
         validateCampaign(campaign);
 
         campaign.setStatus(CampaignStatus.ACTIVE);
 
         Campaign saved = campaignRepository.save(campaign);
 
-        log.info("Campaign created successfully with id={}",saved.getId());
+        log.info("Campaign created successfully with id={}", saved.getId());
+
+
+        publishBidRequestEvent(saved);
+
         return saved;
     }
+
 
     @Override
     public Campaign getCampaignById(Long id) {
 
-        log.info("Getting campaign with id={}",id);
+        log.info("Getting campaign with id={}", id);
 
         return campaignRepository.findById(id)
-                .orElseThrow(()->{
-                    log.error("Campaign not found wtth id={}",id);
+                .orElseThrow(() -> {
+                    log.error("Campaign not found with id={}", id);
                     return new CampaignNotFoundException(id);
                 });
     }
@@ -52,10 +63,9 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     public List<Campaign> getActiveCampaigns() {
 
-
         LocalDateTime now = LocalDateTime.now();
 
-        log.debug("Fetching active campaigns at time={}",now);
+        log.debug("Fetching active campaigns at time={}", now);
 
         return campaignRepository.findByStatusAndStartDateBeforeAndEndDateAfter(
                 CampaignStatus.ACTIVE,
@@ -68,8 +78,7 @@ public class CampaignServiceImpl implements CampaignService {
     @Transactional
     public Campaign updateCampaign(Long id, Campaign campaign) {
 
-
-        log.info("Updating campaign with id={}",id);
+        log.info("Updating campaign with id={}", id);
 
         Campaign existing = getCampaignById(id);
 
@@ -83,7 +92,8 @@ public class CampaignServiceImpl implements CampaignService {
 
         Campaign saved = campaignRepository.save(existing);
 
-        log.info("Campaign updated successfully id={}",id);
+        log.info("Campaign updated successfully id={}", id);
+
         return saved;
     }
 
@@ -91,15 +101,37 @@ public class CampaignServiceImpl implements CampaignService {
     @Transactional
     public void deleteCampaign(Long id) {
 
-        log.warn("Deleting campaign with id={}",id);
-        Campaign saved = getCampaignById(id);
+        log.warn("Deleting campaign with id={}", id);
 
-        campaignRepository.delete(saved);
-        log.info("Campaign deleted successfully with id={}",id);
+        Campaign campaign = getCampaignById(id);
+
+        campaignRepository.delete(campaign);
+
+        log.info("Campaign deleted successfully with id={}", id);
     }
 
 
-    // helper method
+    private void publishBidRequestEvent(Campaign campaign) {
+
+        try {
+            BidRequestEvent event = BidRequestEvent.builder()
+                    .requestId("req-" + campaign.getId())
+                    .userId(1001L) // TODO: replace with real user context later
+                    .location("IN")
+                    .deviceType("MOBILE")
+                    .timestamp(System.currentTimeMillis())
+                    .build();
+
+            log.info("Publishing BidRequestEvent for campaignId={}", campaign.getId());
+
+            bidRequestProducer.publishBidRequest(event);
+
+        } catch (Exception e) {
+            log.error("Failed to publish BidRequestEvent for campaignId={}", campaign.getId(), e);
+        }
+    }
+
+
     private void validateCampaign(Campaign campaign) {
 
         if (campaign.getName() == null || campaign.getName().isBlank()) {
