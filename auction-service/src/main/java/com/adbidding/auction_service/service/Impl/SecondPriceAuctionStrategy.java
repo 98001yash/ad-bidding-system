@@ -24,7 +24,7 @@ public class SecondPriceAuctionStrategy implements AuctionStrategy {
         List<Double> sorted = bids.stream()
                 .map(BidResponseEvent::getBidPrice)
                 .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList());
+                .toList();
 
         if (sorted.size() < 2) {
             return sorted.get(0); // fallback
