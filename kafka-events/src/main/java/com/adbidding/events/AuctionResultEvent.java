@@ -1,7 +1,7 @@
 package com.adbidding.events;
 
 
-import com.adbidding.auction_service.enums.AuctionStatus;
+import com.adbidding.events.enums.AuctionStatus;
 import lombok.*;
 
 @Getter
