@@ -30,4 +30,19 @@ public class CampaignController {
     public ResponseEntity<Campaign> getCampaign(@PathVariable Long id) {
         return ResponseEntity.ok(campaignService.getCampaignById(id));
     }
+
+
+    @GetMapping("/active")
+    public ResponseEntity<List<Campaign>> getActiveCampaigns(){
+        return ResponseEntity.ok(campaignService.getActiveCampaigns());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Campaign> updateCampaigns(
+            @PathVariable Long id,
+            @RequestBody Campaign campaign
+    ){
+        return ResponseEntity.ok(campaignService.updateCampaign(id, campaign));
+
+    }
 }
