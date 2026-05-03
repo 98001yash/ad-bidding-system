@@ -31,4 +31,22 @@ public class AdCreativeController {
         );
     }
 
+    // GET ADS BY CAMPAIGN
+    @GetMapping("/campaign/{campaignId}")
+    public ResponseEntity<List<AdCreative>> getAdsByCampaign(
+            @PathVariable Long campaignId
+    ) {
+        return ResponseEntity.ok(
+                adCreativeService.getAdsByCampaign(campaignId)
+        );
+    }
+
+    // GET AD BY ID
+    @GetMapping("/{adId}")
+    public ResponseEntity<AdCreative> getAd(@PathVariable Long adId) {
+        return ResponseEntity.ok(
+                adCreativeService.getAdById(adId)
+        );
+    }
+
 }
