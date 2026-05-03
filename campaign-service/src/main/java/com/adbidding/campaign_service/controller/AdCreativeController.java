@@ -49,4 +49,21 @@ public class AdCreativeController {
         );
     }
 
+    @PutMapping("/{adId}")
+    public ResponseEntity<AdCreative> updateAd(
+            @PathVariable Long adId,
+            @RequestBody AdCreative adCreative
+    ) {
+        return ResponseEntity.ok(
+                adCreativeService.updateAd(adId, adCreative)
+        );
+    }
+
+    // DELETE AD
+    @DeleteMapping("/{adId}")
+    public ResponseEntity<Void> deleteAd(@PathVariable Long adId) {
+        adCreativeService.deleteAd(adId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
