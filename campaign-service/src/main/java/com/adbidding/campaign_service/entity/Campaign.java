@@ -2,6 +2,7 @@ package com.adbidding.campaign_service.entity;
 
 
 import com.adbidding.campaign_service.enums.CampaignStatus;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,6 +42,7 @@ public class Campaign {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<AdCreative> adCreatives;
 
     @OneToOne(mappedBy = "campaign", cascade = CascadeType.ALL)

@@ -1,6 +1,7 @@
 package com.adbidding.campaign_service.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,5 +27,6 @@ public class AdCreative {
 
     @ManyToOne
     @JoinColumn(name = "campaign_id")
+    @JsonBackReference
     private Campaign campaign;
 }

@@ -35,7 +35,7 @@ public class AuctionServiceImpl implements AuctionService {
 
         if (validBids.isEmpty()) {
             log.warn("No valid bids for requestId={}", requestId);
-            throw new NoBidsException(Long.parseLong(requestId));
+            throw new NoBidsException(requestId);
         }
 
         // Step 2: Select strategy
@@ -45,7 +45,7 @@ public class AuctionServiceImpl implements AuctionService {
         BidResponseEvent winner = strategy.selectWinner(validBids);
 
         if (winner == null) {
-            throw new NoBidsException(Long.parseLong(requestId));
+            throw new NoBidsException(requestId);
         }
 
         // Step 4: Calculate price
