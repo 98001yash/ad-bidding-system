@@ -21,6 +21,7 @@ import java.util.concurrent.*;
 public class BidResponseConsumer {
 
     private final AuctionService auctionService;
+    private final AuctionResultProducer auctionResultProducer;
 
     // Store bids temporarily
     private final Map<String, List<BidResponseEvent>> bidStore = new ConcurrentHashMap<>();
@@ -68,6 +69,8 @@ public class BidResponseConsumer {
                     requestId,
                     result.getWinningAdId(),
                     result.getWinningPrice());
+
+            auctionResultProducer.publishResult(result);
 
         } catch (Exception e) {
             log.error("Auction failed requestId={}", requestId, e);

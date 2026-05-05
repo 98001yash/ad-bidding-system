@@ -1,6 +1,7 @@
 package com.adbidding.auction_service.service.Impl;
 
 
+import com.adbidding.auction_service.kafka.AuctionResultProducer;
 import com.adbidding.events.enums.AuctionStatus;
 import com.adbidding.auction_service.enums.AuctionType;
 import com.adbidding.auction_service.exceptions.NoBidsException;
@@ -8,6 +9,7 @@ import com.adbidding.auction_service.service.AuctionService;
 import com.adbidding.auction_service.service.AuctionStrategy;
 import com.adbidding.events.AuctionResultEvent;
 import com.adbidding.events.BidResponseEvent;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,10 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AuctionServiceImpl implements AuctionService {
+
+    private final AuctionResultProducer auctionResultProducer;
 
     @Override
     public AuctionResultEvent runAuction(
@@ -64,6 +69,7 @@ public class AuctionServiceImpl implements AuctionService {
                 .status(AuctionStatus.SUCCESS)
                 .processedAt(System.currentTimeMillis())
                 .build();
+
     }
 
     private boolean isValidBid(BidResponseEvent bid) {
