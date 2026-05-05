@@ -1,7 +1,7 @@
 package com.adbidding.auction_service.kafka;
 
 
-import com.adbidding.events.BidRequestEvent;
+import com.adbidding.events.BidResponseEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -20,33 +20,33 @@ import java.util.Map;
 public class KafkaConsumerConfig {
 
     @Bean
-    public ConsumerFactory<String, BidRequestEvent> bidRequestConsumerFactory() {
+    public ConsumerFactory<String, BidResponseEvent> bidResponseConsumerFactory() {
 
-        JsonDeserializer<BidRequestEvent> deserializer =
-                new JsonDeserializer<>(BidRequestEvent.class);
+        JsonDeserializer<BidResponseEvent> deserializer =
+                new JsonDeserializer<>(BidResponseEvent.class);
 
         deserializer.addTrustedPackages("com.adbidding.events");
 
         Map<String, Object> props = new HashMap<>();
-
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "auction-group");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
+        return new DefaultKafkaConsumerFactory<>(
+                props,
+                new StringDeserializer(),
+                deserializer
+        );
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, BidRequestEvent>
-    bidRequestKafkaListenerContainerFactory() {
+    public ConcurrentKafkaListenerContainerFactory<String, BidResponseEvent>
+    bidResponseKafkaListenerContainerFactory() {
 
-        ConcurrentKafkaListenerContainerFactory<String, BidRequestEvent> factory =
+        ConcurrentKafkaListenerContainerFactory<String, BidResponseEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 
-        factory.setConsumerFactory(bidRequestConsumerFactory());
+        factory.setConsumerFactory(bidResponseConsumerFactory());
 
         return factory;
     }
