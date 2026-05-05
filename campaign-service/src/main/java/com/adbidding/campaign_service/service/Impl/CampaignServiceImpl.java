@@ -8,6 +8,7 @@ import com.adbidding.campaign_service.kafka.BidRequestProducer;
 import com.adbidding.campaign_service.repository.CampaignRepository;
 import com.adbidding.campaign_service.service.CampaignService;
 
+import com.adbidding.events.AuctionResultEvent;
 import com.adbidding.events.BidRequestEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -153,5 +154,29 @@ public class CampaignServiceImpl implements CampaignService {
             log.error("Invalid campaign: endDate before startDate");
             throw new InvalidCampaignException("End date must be after start date");
         }
+    }
+
+
+
+    @Override
+    @Transactional
+    public void handleAuctionResult(AuctionResultEvent event) {
+
+        Campaign campaign = campaignRepository.findById(event.getCampaignId())
+                .orElseThrow(() -> new CampaignNotFoundException(event.getCampaignId()));
+
+        double remaining = campaign.getRemainingBudget() - event.getWinningPrice();
+
+        if (remaining < 0) {
+            log.warn("Budget exceeded for campaignId={}", campaign.getId());
+            return;
+        }
+
+        campaign.setRemainingBudget(remaining);
+
+        campaignRepository.save(campaign);
+
+        log.info("Budget updated campaignId={}, remaining={}",
+                campaign.getId(), remaining);
     }
 }
