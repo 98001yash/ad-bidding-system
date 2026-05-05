@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="common-libs" />
         <module name="auction-service" />
+        <module name="bidder-service" />
         <module name="campaign-service" />
       </profile>
       <profile name="Annotation profile for ad-bidding-system" enabled="true">
@@ -27,6 +28,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="auction-service" options="-parameters" />
+      <module name="bidder-service" options="-parameters" />
       <module name="campaign-service" options="-parameters" />
     </option>
   </component>
