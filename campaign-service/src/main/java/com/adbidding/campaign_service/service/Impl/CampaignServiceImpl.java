@@ -115,20 +115,25 @@ public class CampaignServiceImpl implements CampaignService {
     private void publishBidRequestEvent(Campaign campaign) {
 
         try {
-            BidRequestEvent event = BidRequestEvent.builder()
-                    .requestId("req-" + campaign.getId())
-                    .userId(1001L) // TODO: replace with real user context later
-                    .location("IN")
-                    .deviceType("MOBILE")
-                    .timestamp(System.currentTimeMillis())
-                    .build();
 
-            log.info("Publishing BidRequestEvent for campaignId={}", campaign.getId());
+            BidRequestEvent event = BidRequestEvent.create(
+                    campaign.getId(),
+                    1001L,
+                    "IN",
+                    "MOBILE"
+            );
+
+            log.info("Publishing BidRequestEvent requestId={}, campaignId={}",
+                    event.getRequestId(),
+                    event.getCampaignId());
 
             bidRequestProducer.publishBidRequest(event);
 
         } catch (Exception e) {
-            log.error("Failed to publish BidRequestEvent for campaignId={}", campaign.getId(), e);
+
+            log.error("Failed to publish BidRequestEvent for campaignId={}",
+                    campaign.getId(),
+                    e);
         }
     }
 

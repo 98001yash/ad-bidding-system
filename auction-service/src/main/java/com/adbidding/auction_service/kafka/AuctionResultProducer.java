@@ -1,6 +1,5 @@
 package com.adbidding.auction_service.kafka;
 
-
 import com.adbidding.events.AuctionResultEvent;
 import com.adbidding.events.common.KafkaTopics;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +12,13 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AuctionResultProducer {
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, AuctionResultEvent> kafkaTemplate;
 
     public void publishResult(AuctionResultEvent event) {
 
-        log.info("Publishing AuctionResultEvent requestId={}, winnerAd={}, price={}",
+        log.info("Publishing AuctionResultEvent requestId={}, campaignId={}, winnerAd={}, price={}",
                 event.getRequestId(),
+                event.getCampaignId(),
                 event.getWinningAdId(),
                 event.getWinningPrice());
 
