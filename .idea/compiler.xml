@@ -7,9 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="common-libs" />
-        <module name="auction-service" />
-        <module name="bidder-service" />
-        <module name="campaign-service" />
+        <module name="kafka-events" />
       </profile>
       <profile name="Annotation profile for ad-bidding-system" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -18,7 +16,9 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.32/lombok-1.18.32.jar" />
         </processorPath>
-        <module name="kafka-events" />
+        <module name="bidder-service" />
+        <module name="auction-service" />
+        <module name="campaign-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
