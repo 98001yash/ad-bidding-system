@@ -23,7 +23,6 @@ public class BidResponseConsumer {
     private final AuctionService auctionService;
     private final AuctionResultProducer auctionResultProducer;
 
-    // Store bids temporarily
     private final Map<String, List<BidResponseEvent>> bidStore = new ConcurrentHashMap<>();
 
     private final ScheduledExecutorService scheduler =
@@ -31,7 +30,8 @@ public class BidResponseConsumer {
 
     @KafkaListener(
             topics = KafkaTopics.BID_RESPONSE,
-            groupId = "auction-group"
+            groupId = "auction-group",
+            containerFactory = "bidResponseKafkaListenerContainerFactory"
     )
     public void consume(BidResponseEvent event) {
 
