@@ -1,0 +1,8 @@
+com\adbidding\events\AuctionResultEvent$AuctionResultEventBuilder.class
+com\adbidding\events\BidRequestEvent.class
+com\adbidding\events\BidResponseEvent$BidResponseEventBuilder.class
+com\adbidding\events\AuctionResultEvent.class
+com\adbidding\events\common\KafkaTopics.class
+com\adbidding\events\BidResponseEvent.class
+com\adbidding\events\enums\AuctionStatus.class
+com\adbidding\events\BidRequestEvent$BidRequestEventBuilder.class
