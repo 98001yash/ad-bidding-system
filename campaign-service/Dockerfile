@@ -23,4 +23,4 @@ COPY --from=builder /app/campaign-service/target/*.jar app.jar
 
 EXPOSE 8090
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=docker"]
