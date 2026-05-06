@@ -39,7 +39,7 @@ public class BidRequestConsumer {
             BidResponseEvent response = BidResponseEvent.builder()
                     .requestId(event.getRequestId())
                     .adId(generateAdId())
-                    .campaignId(generateCampaignId())
+                    .campaignId(event.getCampaignId())
                     .bidPrice(bidPrice)
                     .bidderId("bidder-service-1")
                     .timestamp(System.currentTimeMillis())
@@ -67,7 +67,4 @@ public class BidRequestConsumer {
         return Math.abs(random.nextLong() % 1000);
     }
 
-    private Long generateCampaignId() {
-        return Math.abs(random.nextLong() % 500);
-    }
 }
