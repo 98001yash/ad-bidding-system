@@ -23,7 +23,6 @@ services:
     restart: unless-stopped
 
 
-
   kafka:
     image: apache/kafka:3.7.0
     container_name: kafka
@@ -59,8 +58,55 @@ services:
     restart: unless-stopped
 
 
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+
+    ports:
+      - "9090:9090"
+
+    volumes:
+      - ./prometheus:/etc/prometheus
+
+    depends_on:
+      - campaign-service
+      - bidder-service
+      - auction-service
+
+    restart: unless-stopped
+
+
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+
+    depends_on:
+      - prometheus
+
+    restart: unless-stopped
+
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+
+    ports:
+      - "9411:9411"
+
+    restart: unless-stopped
+
+
   campaign-service:
-    image: yash01er/campaign-service:v4
+    image: yash01er/campaign-service:v5
     container_name: campaign-service
 
     depends_on:
@@ -80,7 +126,7 @@ services:
 
 
   bidder-service:
-    image: yash01er/bidder-service:v4
+    image: yash01er/bidder-service:v5
     container_name: bidder-service
 
     depends_on:
@@ -97,10 +143,8 @@ services:
 
 
 
-
-
   auction-service:
-    image: yash01er/auction-service:v4
+    image: yash01er/auction-service:v5
     container_name: auction-service
 
     depends_on:
@@ -117,7 +161,6 @@ services:
       SPRING_PROFILES_ACTIVE: docker
 
     restart: unless-stopped
-
 
 
 volumes:
