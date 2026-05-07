@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS bidding_campaigndb;
+
+CREATE DATABASE IF NOT EXISTS bidding_auctiondb;
