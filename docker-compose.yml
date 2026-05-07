@@ -15,10 +15,12 @@ services:
       - ./init-db:/docker-entrypoint-initdb.d
 
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pyash8252"]
       interval: 5s
       timeout: 5s
       retries: 10
+
+    restart: unless-stopped
 
 
 
@@ -31,25 +33,34 @@ services:
 
     environment:
       KAFKA_NODE_ID: 1
+
       KAFKA_PROCESS_ROLES: broker,controller
 
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
 
       KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
 
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
 
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
 
-      KAFKA_CLUSTER_ID: ad-bidding-cluster
+      KAFKA_CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
 
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
+    restart: unless-stopped
+
 
   campaign-service:
-    image: yash01er/campaign-service:v2
+    image: yash01er/campaign-service:v4
     container_name: campaign-service
 
     depends_on:
@@ -65,9 +76,11 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
 
+    restart: unless-stopped
+
 
   bidder-service:
-    image: yash01er/bidder-service:v2
+    image: yash01er/bidder-service:v4
     container_name: bidder-service
 
     depends_on:
@@ -80,9 +93,14 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
 
+    restart: unless-stopped
+
+
+
+
 
   auction-service:
-    image: yash01er/auction-service:v2
+    image: yash01er/auction-service:v4
     container_name: auction-service
 
     depends_on:
@@ -97,6 +115,10 @@ services:
 
     environment:
       SPRING_PROFILES_ACTIVE: docker
+
+    restart: unless-stopped
+
+
 
 volumes:
   mysql-data:
