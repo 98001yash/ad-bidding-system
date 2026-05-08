@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: campaign-service
+  namespace: ad-bidding-system
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: campaign-service
+
+  template:
+    metadata:
+      labels:
+        app: campaign-service
+
+    spec:
+      containers:
+        - name: campaign-service
+
+          image: yash01er/campaign-service:v5
+
+          ports:
+            - containerPort: 8090
+
+          envFrom:
+            - configMapRef:
+                name: campaign-service-config
+
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: yash8252
