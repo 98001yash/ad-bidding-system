@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: mysql-pvc
+  namespace: ad-bidding-system
+
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+
+
+
+  resources:
+    requests:
+      storage: 5Gi
