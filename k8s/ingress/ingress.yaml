@@ -1,58 +1,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
-
 metadata:
   name: ad-bidding-ingress
   namespace: ad-bidding-system
 
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+
 spec:
-  ingressClassName: nginx
-
   rules:
-
-    - host: ad-bidding.local
-
-      http:
+    - http:
         paths:
-
           - path: /
             pathType: Prefix
-
             backend:
               service:
                 name: campaign-service
-
                 port:
                   number: 8090
-
-
-    - host: grafana.local
-
-      http:
-        paths:
-
-          - path: /
-            pathType: Prefix
-
-            backend:
-              service:
-                name: grafana
-
-                port:
-                  number: 3000
-
-
-    - host: zipkin.local
-
-      http:
-        paths:
-
-          - path: /
-            pathType: Prefix
-
-            backend:
-              service:
-                name: zipkin
-
-                port:
-                  number: 9411
