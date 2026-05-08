@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: bidder-service-config
+  namespace: ad-bidding-system
+
+data:
+  SPRING_PROFILES_ACTIVE: docker
+
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
