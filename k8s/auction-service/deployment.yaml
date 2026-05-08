@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: auction-service
+  namespace: ad-bidding-system
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: auction-service
+
+  template:
+    metadata:
+      labels:
+        app: auction-service
+
+    spec:
+      containers:
+        - name: auction-service
+
+          image: yash01er/auction-service:v5
+
+          ports:
+            - containerPort: 8092
+
+          envFrom:
+            - configMapRef:
+                name: auction-service-config
+
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: yash8252
