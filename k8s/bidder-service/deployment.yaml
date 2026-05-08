@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: bidder-service
+  namespace: ad-bidding-system
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: bidder-service
+
+  template:
+    metadata:
+      labels:
+        app: bidder-service
+
+    spec:
+      containers:
+        - name: bidder-service
+
+          image: yash01er/bidder-service:v5
+
+          ports:
+            - containerPort: 8093
+
+          envFrom:
+            - configMapRef:
+                name: bidder-service-config

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: bidder-service
+  namespace: ad-bidding-system
+
+spec:
+  selector:
+    app: bidder-service
+
+  ports:
+    - port: 8093
+      targetPort: 8093
+
+  type: ClusterIP
